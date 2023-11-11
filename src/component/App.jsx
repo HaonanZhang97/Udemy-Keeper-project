@@ -1,24 +1,39 @@
-import React from 'react';
+import { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Note from './Note';
-import notes from '../resources/notes';
+import CreateNote from './CreateNote';
 
 function App() {
+  const [notes, setnotes] = useState([]);
+  const addNotes = (inputNote) => {
+    setnotes([...notes, inputNote]);
+  };
+  const deleteNote = (id) => {
+    setnotes((prevNote) => {
+      return prevNote.filter((_, index) => {
+        return index !== id;
+      });
+    });
+  };
   return (
-    <header>
+    <div>
       <Header />
-      {notes.map((noteItem) => {
+      <CreateNote onAdd={addNotes} />
+      {notes.map((noteItem, index) => {
         return (
           <Note
-            key={noteItem.id}
+            key={index}
+            id={index}
             title={noteItem.title}
             content={noteItem.content}
+            onDelete={deleteNote}
           />
         );
       })}
+
       <Footer />
-    </header>
+    </div>
   );
 }
 export default App;
